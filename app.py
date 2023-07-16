@@ -38,25 +38,11 @@ def coordenadas():
 ]
 
 
-
-
-
-
-
     coordenadas_json = json.dumps(lista_coordenadas)
-
-
     return render_template('coordenadas.html', coordenadas=coordenadas_json)
 
 if __name__ == '__main__':
     app.run(debug=True)
 
 
-
-
-incial = -28.575391, -70.740664
-
-MEdia = -28.578331, -70.741876
-
-fianl = -28.581091, -70.747400
 

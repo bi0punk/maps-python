@@ -14,6 +14,7 @@
 <body>
     <div id="map"></div>
     <button id="startButton">Start</button>
+    <button id="stopButton" disabled>Stop</button>
     <script>
         var coordenadas = JSON.parse('{{ coordenadas | safe }}');
         var map = L.map('map').setView(coordenadas[0], 17);  // Establecer el zoom en 17
@@ -35,7 +36,7 @@
 
         function startPinChange() {
             if (interval) {
-                clearInterval(interval);
+                return;
             }
             var i = 1;
             interval = setInterval(function () {
@@ -46,11 +47,26 @@
                     i++;
                 } else {
                     clearInterval(interval);
+                    interval = null;
+                    document.getElementById('startButton').disabled = false;
+                    document.getElementById('stopButton').disabled = true;
                 }
             }, 2000);
+            document.getElementById('startButton').disabled = true;
+            document.getElementById('stopButton').disabled = false;
+        }
+
+        function stopPinChange() {
+            if (interval) {
+                clearInterval(interval);
+                interval = null;
+                document.getElementById('startButton').disabled = false;
+                document.getElementById('stopButton').disabled = true;
+            }
         }
 
         document.getElementById('startButton').addEventListener('click', startPinChange);
+        document.getElementById('stopButton').addEventListener('click', stopPinChange);
 
         // Función para borrar la línea al actualizar la página
         window.onbeforeunload = function() {

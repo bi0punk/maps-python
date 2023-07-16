@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Coordenadas</title>
+    <style>
+        #map {
+            height: 500px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+    <div id="map"></div>
+    <button id="startButton">Start</button>
+    <script>
+        var coordenadas = JSON.parse('{{ coordenadas | safe }}');
+        var map = L.map('map').setView(coordenadas[0], 17);  // Establecer el zoom en 17
+        var polyline = L.polyline(coordenadas, {color: 'blue'});  // Crear la línea sin añadirla al mapa
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var customIcon = L.icon({
+            iconUrl: 'https://i.ibb.co/RcyK0M0/1.png',
+            iconSize: [100, 100],
+            iconAnchor: [12, 41]
+        });
+
+        var marker = L.marker(coordenadas[0], { icon: customIcon });
+
+        var interval;
+
+        function startPinChange() {
+            if (interval) {
+                clearInterval(interval);
+            }
+            var i = 1;
+            interval = setInterval(function () {
+                if (i < coordenadas.length) {
+                    marker.setLatLng(coordenadas[i]);
+                    polyline.addLatLng(coordenadas[i]);  // Agregar punto a la línea
+                    map.panTo(coordenadas[i]);
+                    i++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 2000);
+        }
+
+        document.getElementById('startButton').addEventListener('click', startPinChange);
+
+        // Función para borrar la línea al actualizar la página
+        window.onbeforeunload = function() {
+            map.removeLayer(polyline);
+        };
+        
+        marker.addTo(map);
+    </script>
+</body>
+</html>

@@ -7,6 +7,25 @@
         #map {
             height: 500px;
         }
+
+        /* Estilos para el contenido del popup */
+        .popup-content {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .popup-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .popup-coordinates {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
@@ -52,8 +71,25 @@
             interval = setInterval(function () {
                 if (i < coordenadas.length) {
                     marker.setLatLng(coordenadas[i]);
+                    map.setView(coordenadas[i], 17);  // Centrar el mapa en la coordenada actual
                     polyline.addLatLng(coordenadas[i]);  // Agregar punto a la línea
-                    map.panTo(coordenadas[i]);
+
+                    // Obtener coordenada inicial, final y actual
+                    var coordInicial = coordenadas[0];
+                    var coordFinal = coordenadas[coordenadas.length - 1];
+                    var coordActual = coordenadas[i];
+
+                    // Crear el contenido del mensaje emergente con estilos personalizados
+                    var popupContent = '<div class="popup-content">' +
+                        '<div class="popup-title">Información de la coordenada:</div>' +
+                        '<div class="popup-coordinates"><strong>Coordenada inicial:</strong> ' + coordInicial + '</div>' +
+                        '<div class="popup-coordinates"><strong>Coordenada final:</strong> ' + coordFinal + '</div>' +
+                        '<div class="popup-coordinates"><strong>Coordenada actual:</strong> ' + coordActual + '</div>' +
+                        '</div>';
+
+                    // Establecer el contenido del mensaje emergente
+                    marker.bindPopup(popupContent);
+
                     i++;
                 } else {
                     clearInterval(interval);

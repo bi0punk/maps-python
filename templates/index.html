@@ -34,44 +34,36 @@
             maxZoom: 18,
         }).addTo(map);
 
-        $.ajax({
-            url: '/api/coordinates',
-            method: 'GET',
-            success: function(response) {
-                var coordenadas = response.coordenadas;
+        $.get('/api/coordinates', function(response) {
+            var coordenadas = response.coordenadas;
 
-                var myIcon = L.icon({
-                    iconUrl: 'https://i.ibb.co/RcyK0M0/1.png',
-                    iconSize: [50, 50],
-                    iconAnchor: [16, 32],
-                });
+            var myIcon = L.icon({
+                iconUrl: 'https://i.ibb.co/RcyK0M0/1.png',
+                iconSize: [50, 50],
+                iconAnchor: [16, 32],
+            });
 
-                function showCoordinates() {
-                    var index = 0;
-                    var marker;
+            var index = 0;
+            var marker;
 
-                    function displayNextCoordinate() {
-                        var coordinates = coordenadas[index];
-                        var lat = coordinates[0];
-                        var lon = coordinates[1];
+            function displayNextCoordinate() {
+                var coordinates = coordenadas[index];
+                var lat = coordinates[0];
+                var lon = coordinates[1];
 
-                        if (marker) {
-                            marker.setLatLng([lat, lon]);
-                        } else {
-                            marker = L.marker([lat, lon], { icon: myIcon }).addTo(map);
-                        }
-
-                        index++;
-                        if (index < coordenadas.length) {
-                            setTimeout(displayNextCoordinate, 3000);  // Retraso de 3 segundos entre cada coordenada
-                        }
-                    }
-
-                    displayNextCoordinate();
+                if (marker) {
+                    marker.setLatLng([lat, lon]);
+                } else {
+                    marker = L.marker([lat, lon], { icon: myIcon }).addTo(map);
                 }
 
-                showCoordinates();
+                index++;
+                if (index < coordenadas.length) {
+                    setTimeout(displayNextCoordinate, 3000);  // Retraso de 3 segundos entre cada coordenada
+                }
             }
+
+            displayNextCoordinate();
         });
     </script>
 </body>

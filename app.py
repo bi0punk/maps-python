@@ -1,9 +1,6 @@
-import json
-import time
 from flask import Flask, render_template
 
 app = Flask(__name__)
-
 
 @app.route('/')
 def coordenadas():
@@ -22,9 +19,7 @@ def coordenadas():
         [-28.581139335273047, -70.7474228957248]
     ]
 
-    coordenadas_json = json.dumps(lista_coordenadas)
-    return render_template('coordenadas.html', coordenadas=coordenadas_json)
-
+    return render_template('coordenadas.html', coordenadas=lista_coordenadas)
 
 if __name__ == '__main__':
     app.run(debug=True)
